@@ -1,0 +1,7 @@
+resources/encrypt_key.json
+resource/error_log.txt
+resource/email_config.json
+node_modules
+old
+public
+.env

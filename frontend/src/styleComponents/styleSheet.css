@@ -1,0 +1,116 @@
+.sbutton
+{
+	border-radius: 5px;
+	border: 1px solid rgb(80, 80, 80);
+	padding: 0.2rem 0.6rem 0.2rem 0.6rem;
+	margin: 0.2rem;
+}
+
+.default{
+	background-color: #dfd5d9;
+	color: black;
+}
+
+.default:hover{
+	background-color: #b1aaae;
+	color: #000000;
+}
+
+.primary{
+	background-color: #7f72ff;
+	color: #ffffff;
+
+}
+
+.primary:hover{
+	background-color: #5445f6;
+	color: #ffffff;
+}
+
+.warning {
+	background-color: #ff6c6c;
+	color: rgb(255, 255, 255);
+}
+
+.warning:hover{
+	background-color: #e03333;
+	color: rgb(255, 255, 255);
+}
+
+.submit {
+	background-color: #70ce5f;
+	color: #ffffff;
+}
+
+.submit:hover{
+	background-color: #24b833;
+	color: rgb(255, 255, 255);
+}
+
+
+.black {
+	background-color: #000000;
+	color: white;
+}
+
+.white{
+	background-color: white;
+	color: black;
+}
+
+.scontainer{
+	max-width: 950px;
+	margin: auto;
+	padding: auto;
+}
+
+@media screen  and (max-width: 1000px){
+	.scontainer{
+		max-width: 600px;
+	}
+}
+@media screen  and (max-width: 650px){
+	.scontainer{
+		max-width: 350px;
+	}
+}
+
+.stextfield input{
+	border-radius: 10px;
+	outline: none;
+	padding: 0.3rem;
+	border-color: rgba(0, 0, 0, 0.322);
+	text-align: center;
+	min-width: 100px;
+	margin-top: 0.1rem;
+	margin-bottom: 0.4rem;
+}
+
+
+
+.stextfield{
+	display: inline-block;
+}
+
+.stextfield input:focus{
+	border-color: black;
+}
+
+.stextfield small{
+	display: block;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+.loadingSymbol{
+	animation: spin 1s linear infinite
+
+}
+
+@keyframes spin {
+	0%{
+		-webkit-transform: rotate(0deg);
+	}
+	100%{
+		-webkit-transform: rotate(360deg);
+	}
+}
