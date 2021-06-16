@@ -30,12 +30,15 @@ Login-system:
 - Logout 
 - email system to confirm account and reset password
 
+
+Todo:
+
+- gamesystem
+- million things
+- easy initialization
+- 
+
 Game:
 - w,a,s,d to move
 - change color
 - t to chat
-
-Todo:
-
-- million things
-
