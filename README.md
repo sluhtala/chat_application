@@ -1,4 +1,4 @@
-![project image](./project_image.png)
+WIP
 
 **Important!**
 	This project is for educational purpose only.
