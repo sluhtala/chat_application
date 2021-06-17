@@ -9,13 +9,13 @@ const getConfig = (user)=>{
 }
 
 const newUser = async (user)=>{
-	const result = await axios.post(`${baseUrl}/test`, user);
+	const result = await axios.post(`${baseUrl}`, user);
 	console.log(result)
 	return result.data;
 }
 
 const activateUser = async (user) => {
-	const result = await axios.put(`${baseUrl}/${user.id}`,{id: user.id}, getConfig(user));
+	const result = await axios.put(`${baseUrl}/${user.id}`, user);
 	return result.data;
 }
 

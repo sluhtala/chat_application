@@ -16,10 +16,12 @@ async function create_connection_pool(){
 
 async function find_user_by_id(id)
 {
-	const connection = mysql.createConnection(sql_opts);
+	const pool = await create_connection_pool();
 	const sql = 'SELECT * FROM users WHERE id=?';
-	const result = await connection.query(sql, id);
-	return result;
+	const [rows, fields] = await pool.execute(sql, [id]);
+	if (rows.length === 0)
+		return null;
+	return {...rows[0]};
 }
 
 async function find_all_users()
@@ -41,9 +43,18 @@ async function find_user_by_name(name)
 }
 
 
-async function update_user()
+async function update_user(id, type)
 {
-
+	let sql;
+	if (type === 'activate')
+		sql = `UPDATE users SET status='offline' WHERE id=?`;
+	else
+	{
+		return false;
+	}
+	const pool = await create_connection_pool();
+	const result = await pool.execute(sql, [id]);
+	return true;
 }
 
 async function delete_user(id)
@@ -62,9 +73,11 @@ async function delete_user(id)
 
 async function add_user(user){
 	const pool = await create_connection_pool();
-    const sql = `INSERT INTO users (username, email, password, status) VALUES(?,?,?,?);`;
-	const [rows, fields] = await pool.execute(sql, [user.username, user.email, user.password, 'disabled']);
-	return {rows, fields};
+    const sql = `INSERT INTO users (username, email, password, status, randomId) VALUES(?,?,?,?,?);`;
+	const result = await pool.execute(sql, [user.username, user.email, user.password, 'disabled', user.randomId]);
+	if (!result || !result[0])
+		return null;
+	return {id: result[0].insertId};
 }
 
 const queries = {

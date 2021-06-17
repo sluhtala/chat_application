@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const user_handler = require('../user_handler');
 const { requireToken } = require('../utils/middlewares');
+const mailHandler = require('../mail_handler');
 
 router.get('/', requireToken ,async (req, res)=>{
 	try {
@@ -46,22 +47,24 @@ router.get('/:id', async (req, res)=>{
 router.post('/', async (req, res) => {
 	try {
 		const body = req.body;
-		await user_handler.add_user(body)
+		if (!user_handler.validate(body))
+			throw new Error('User not validated');
+		const user = await user_handler.add_user(body)
+		// send email 
+		mailHandler.sendConfirmEmail(user);
 		res.send(body);
 	}
 	catch(e){
-		if (e.name === 'invalid credentials')
-		{
-			res.status(401).send({error: e.message})
-		}
-		else
-		{
-			res.status(400).send({error: e.message});
-		}
+		res.status(400).send({error: e.message});
 	}
 });
 
 router.put('/:id', (req, res)=>{
+	console.log(`activating user... ${req.body.id} ${req.body.randomId}`)
+	if (!req.body.id || !req.body.randomId)
+		res.status(400).send({error: 'invalid user parameters'});
+	console.log(req.body)
+	user_handler.activate_user(req.body);
 	res.send(`id: ${req.params.id}`);
 });
 

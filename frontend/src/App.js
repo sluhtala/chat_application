@@ -6,6 +6,8 @@ import LoginForm from './loginForm';
 import './app.css';
 import Application from './application';
 import userService from './services/userService';
+import Notification from './components/notification';
+import queryString from 'query-string';
 
 
 const Home = ({setUser})=>{
@@ -59,23 +61,30 @@ const Header = (props)=>{
 }
 
 
-const UserActivation = ()=>{
+const UserActivation = (props)=>{
 	const history = useHistory();
-	const params = useParams();
+	const [activated, setActivated] = useState(false);
+	const params = queryString.parse(window.location.search);
 
 	useEffect(()=>{
-		const user = {id: params.id, token: params.id}
+		const user = {id: params.id, randomId: params.randomId}
 		userService.activateUser(user)
 		.then((res)=>{
 			console.log(res);
-			sessionStorage.setItem('user', JSON.stringify(res));
-			history.push('/application');
+			setActivated(true);
 		})
 		.catch((e)=>{
 			console.log(e);
 		})
 	},[history, params])
-	return (<div></div>)
+	return (<div>
+		{
+		!activated 
+		? 	'activating user...'
+		:		<div><Notification text='User Activated' color='green'></Notification>
+				<Link to='/login'>login</Link></div>
+		}
+	</div>)
 }
 
 
@@ -111,7 +120,7 @@ const App = () => {
 					<Route path="/application">
 						<Application user={user} setUser={setUser}/>
 					</Route>
-					<Route path="/userActivation/:token">
+					<Route path="/userActivation">
 						<UserActivation/>
 					</Route>
 					<Route path="/">

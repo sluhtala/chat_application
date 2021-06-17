@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 // functions that deal with users 
 const saltRounds = parseInt(process.env.HASH_SALTROUNDS);
 const _ = require('lodash');
+const rndString = require('randomstring');
 
 const user_object = {
 	username: 'username',
@@ -22,22 +23,35 @@ async function add_user(user){
 	const existing = await userQueries.find_user_by_name(user.username);
 	if (!existing)
 	{
+		const randomString = rndString.generate(10);
 		const hashedPw = await bcrypt.hash(user.password, saltRounds)
 		user.password = hashedPw;
+		user.randomId = randomString;
 		const result = await userQueries.add_user(user);
+		result.randomId = randomString;
+		result.email = user.email;
+		console.log(result);
 		return result;
 	}
 	else
 	{
 		const e = new Error('Username already exists')
-		e.name = 'invalid credentials';
+		e.name = 'username exists';
 		throw e;
 	}
 }
 
-function send_activation_link()
-{
-	console.log('sending link')
+async function activate_user({id, randomId}){
+	const user = await userQueries.find_user_by_id(id);
+	if (user && user.randomId === randomId)
+	{
+		// activate user
+		const result = await userQueries.update_user(id, 'activate');
+		if (result === false)
+			throw Error('something went wrong')
+	}
+	else
+		throw new Error('Error activating user')
 }
 
 async function delete_user(id) {
@@ -51,9 +65,6 @@ function update_user() {
 	
 }
 
-function activate_user(){
-
-}
 
 async function find_user(options) {
 	if (_.isEmpty(options))
@@ -79,12 +90,24 @@ async function find_user(options) {
 	return null;
 }
 
+const validate = (user)=>{
+	if (!user.username || !user.password || !user.email)
+		return false;
+	if (user.username < 4 || user.password < 4)
+		return false;
+	const mailpattern = /[\w.-_]*@\w*\.\w*/;
+	if (!mailpattern.test(user.email))
+		return false;
+	return true;
+};
+
 const handler = {
 	add_user,
 	delete_user,
 	update_user,
 	find_user,
-	activate_user
+	activate_user,
+	validate
 }
 
 module.exports = handler;

@@ -29,6 +29,7 @@
         "lodash": "^4.17.21",
         "mysql2": "^2.2.5",
         "nodemailer": "^6.6.1",
+        "randomstring": "^1.2.1",
         "socket.io": "^4.0.0"
     },
     "devDependencies": {
